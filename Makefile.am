@@ -1,0 +1,11 @@
+ACLOCAL_AMFLAGS = -I config
+
+EXTRA_DIST = \
+	AUTHORS \
+	COPYING \
+	ChangeLog \
+	INSTALL \
+	NEWS \
+	README
+
+SUBDIRS = src
