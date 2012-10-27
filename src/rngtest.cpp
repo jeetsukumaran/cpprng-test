@@ -170,17 +170,18 @@ void run_c11_ranlux48_base_tests(TimeLogger& time_logger, unsigned int nreps=DEF
     run_c11_tests("RANLUX48_BASE", rng, time_logger, nreps);
 }
 
-void run_c11_knuth_b_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
-    std::random_device rd;
-    std::knuth_b rng(rd());
-    run_c11_tests("RANLUX48_BASE", rng, time_logger, nreps);
-}
-
 void run_c11_ranlux48_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
     std::random_device rd;
     std::ranlux48 rng(rd());
     run_c11_tests("RANLUX48", rng, time_logger, nreps);
 }
+
+void run_c11_knuth_b_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
+    std::random_device rd;
+    std::knuth_b rng(rd());
+    run_c11_tests("KNUTHB", rng, time_logger, nreps);
+}
+
 
 void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
     std::string implementation = "GSL";
