@@ -289,7 +289,6 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
         }
         clock->stop();
         std::cerr << implementation << gen_alg << "poisson with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
-        std::cerr << std::endl;
 
         clock = time_logger.new_timer(implementation, gen_alg, "Geometric[0.02]");
         clock->start();
