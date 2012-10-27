@@ -76,6 +76,7 @@ class TimeLogger {
         RunClock * new_timer(const std::string& implementation, const std::string& algorithm, const std::string& operation) {
             RunClock * rc = new RunClock(implementation, algorithm, operation);
             this->logs_.push_back(rc);
+            this->logs_by_operation_[operation].push_back(rc);
             return rc;
         }
         void summarize(std::ostream& out) {
@@ -84,9 +85,20 @@ class TimeLogger {
                 rc->print(out);
             }
         }
+        void summarize_by_operation(std::ostream& out) {
+            for (auto log_by_operation : this->logs_by_operation_) {
+                std::string operation = log_by_operation.first;
+                std::vector<RunClock *> logs = log_by_operation.second;
+                std::sort(logs.begin(), logs.end(), &cmp_results);
+                for (auto rc : logs) {
+                    rc->print(out);
+                }
+            }
+        }
 
     private:
-        std::vector<RunClock *>   logs_;
+        std::vector<RunClock *>                        logs_;
+        std::map<std::string, std::vector<RunClock *>> logs_by_operation_;
 
 }; // TimeLogger
 
@@ -277,5 +289,6 @@ int main() {
     run_c11_knuth_b_tests(time_logger, nreps);
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
-    time_logger.summarize(std::cout);
+    // time_logger.summarize(std::cout);
+    time_logger.summarize_by_operation(std::cout);
 }
