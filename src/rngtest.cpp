@@ -84,9 +84,21 @@ class TimeLogger {
             }
         }
         RunClock * new_timer(const std::string& implementation, const std::string& algorithm, const std::string& operation) {
-            RunClock * rc = new RunClock(implementation, algorithm, operation);
-            this->logs_.push_back(rc);
-            this->logs_by_operation_[operation].push_back(rc);
+            RunClock * rc = nullptr;
+            std::string rc_hash = implementation + "::" + algorithm + "::" + operation;
+            std::map<std::string, RunClock *>::iterator rci = this->run_clocks_.find(rc_hash);
+            if (rci != this->run_clocks_.end()) {
+                rc = rci->second;
+            } else {
+                rc = new RunClock(implementation, algorithm, operation);
+                this->run_clocks_[rc_hash] = rc;
+                this->logs_.push_back(rc);
+                this->logs_by_operation_[operation].push_back(rc);
+            }
+            // rc = new RunClock(implementation, algorithm, operation);
+            // this->run_clocks_[rc_hash] = rc;
+            // this->logs_.push_back(rc);
+            // this->logs_by_operation_[operation].push_back(rc);
             return rc;
         }
         void summarize(std::ostream& out) {
@@ -110,6 +122,7 @@ class TimeLogger {
     private:
         std::vector<RunClock *>                        logs_;
         std::map<std::string, std::vector<RunClock *>> logs_by_operation_;
+        std::map<std::string, RunClock *>              run_clocks_;
 
 }; // TimeLogger
 
