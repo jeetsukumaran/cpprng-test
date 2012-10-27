@@ -149,7 +149,7 @@ void run_c11_minstd_rand_tests(TimeLogger& time_logger, unsigned int nreps=DEFAU
 void run_c11_minstd_rand0_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
     std::random_device rd;
     std::minstd_rand0 rng(rd());
-    run_c11_tests("MINSTD_RAND", rng, time_logger, nreps);
+    run_c11_tests("MINSTD_RAND0", rng, time_logger, nreps);
 }
 
 void run_c11_ranlux24_base_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
@@ -167,6 +167,12 @@ void run_c11_ranlux24_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_
 void run_c11_ranlux48_base_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
     std::random_device rd;
     std::ranlux48_base rng(rd());
+    run_c11_tests("RANLUX48_BASE", rng, time_logger, nreps);
+}
+
+void run_c11_knuth_b_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
+    std::random_device rd;
+    std::knuth_b rng(rd());
     run_c11_tests("RANLUX48_BASE", rng, time_logger, nreps);
 }
 
@@ -251,6 +257,7 @@ int main() {
     run_c11_ranlux48_tests(time_logger, nreps);
     run_c11_minstd_rand_tests(time_logger, nreps);
     run_c11_minstd_rand0_tests(time_logger, nreps);
+    run_c11_knuth_b_tests(time_logger, nreps);
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
     time_logger.summarize(std::cout);
