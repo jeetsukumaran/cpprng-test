@@ -1,3 +1,4 @@
+#include <utility>
 #include <algorithm>
 #include <exception>
 #include <iomanip>
@@ -29,7 +30,7 @@ class RunClock {
         }
         void start() {
             this->elapsed_seconds_ = -1;
-            this->begin_ = std::chrono::system_clock::now();
+            this->begin_ = std::move(std::chrono::system_clock::now());
         }
         void stop() {
             TimePointType end = std::chrono::system_clock::now();
