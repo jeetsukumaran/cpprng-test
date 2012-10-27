@@ -374,16 +374,18 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
 int main() {
     unsigned int    nreps = DEFAULT_NREPS;
     TimeLogger      time_logger;
-    run_gsl_rng_tests(time_logger, nreps);
-    run_c11_mt19937_tests(time_logger, nreps);
-    run_c11_mt19937_64_tests(time_logger, nreps);
-    run_c11_ranlux24_base_tests(time_logger, nreps);
-    run_c11_ranlux24_tests(time_logger, nreps);
-    run_c11_ranlux48_base_tests(time_logger, nreps);
-    run_c11_ranlux48_tests(time_logger, nreps);
-    run_c11_minstd_rand_tests(time_logger, nreps);
-    run_c11_minstd_rand0_tests(time_logger, nreps);
-    run_c11_knuth_b_tests(time_logger, nreps);
+    for (unsigned int i = 0; i < DEFAULT_REPEAT; ++i) {
+        run_gsl_rng_tests(time_logger, nreps);
+        run_c11_mt19937_tests(time_logger, nreps);
+        run_c11_mt19937_64_tests(time_logger, nreps);
+        run_c11_ranlux24_base_tests(time_logger, nreps);
+        run_c11_ranlux24_tests(time_logger, nreps);
+        run_c11_ranlux48_base_tests(time_logger, nreps);
+        run_c11_ranlux48_tests(time_logger, nreps);
+        run_c11_minstd_rand_tests(time_logger, nreps);
+        run_c11_minstd_rand0_tests(time_logger, nreps);
+        run_c11_knuth_b_tests(time_logger, nreps);
+    }
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
     // time_logger.summarize(std::cout);
