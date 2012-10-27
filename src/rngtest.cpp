@@ -88,7 +88,7 @@ class TimeLogger {
         void summarize_by_operation(std::ostream& out) {
             for (auto log_by_operation : this->logs_by_operation_) {
                 std::string operation = log_by_operation.first;
-                out << "\n\n\n### " << operation << " ###\n\n";
+                out << "\n\n### " << operation << " ###\n\n";
                 std::vector<RunClock *> logs = log_by_operation.second;
                 std::sort(logs.begin(), logs.end(), &cmp_results);
                 for (auto rc : logs) {
