@@ -96,6 +96,14 @@ class TimeLogger {
                 }
             }
         }
+        void summarize_best_by_operation(std::ostream& out) {
+            for (auto log_by_operation : this->logs_by_operation_) {
+                std::string operation = log_by_operation.first;
+                std::vector<RunClock *> logs = log_by_operation.second;
+                std::sort(logs.begin(), logs.end(), &cmp_results);
+                (*logs.begin())->print(out);
+            }
+        }
 
     private:
         std::vector<RunClock *>                        logs_;
@@ -359,5 +367,6 @@ int main() {
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
     // time_logger.summarize(std::cout);
-    time_logger.summarize_by_operation(std::cout);
+    // time_logger.summarize_by_operation(std::cout);
+    time_logger.summarize_best_by_operation(std::cout);
 }
