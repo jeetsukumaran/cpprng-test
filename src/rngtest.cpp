@@ -155,6 +155,25 @@ void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time
     clock->stop();
     std::cerr << rng_name << ": poisson with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
     std::cerr << std::endl;
+
+    clock = time_logger.new_timer("C++11", rng_name, "Geometric[0.02]");
+    std::geometric_distribution<> g1(0.02);
+    clock->start();
+    for (unsigned int rep = 0; rep < nreps; ++rep) {
+        g1(rng);
+    }
+    clock->stop();
+    std::cerr << rng_name << ": geometric with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+
+    clock = time_logger.new_timer("C++11", rng_name, "Geometric[p]");
+    clock->start();
+    for (unsigned int rep = 0; rep < nreps; ++rep) {
+        std::geometric_distribution<> g2(params[rep]);
+        g2(rng);
+    }
+    clock->stop();
+    std::cerr << rng_name << ": geometric with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << std::endl;
 }
 
 void run_c11_mt19937_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
@@ -271,6 +290,23 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
         }
         clock->stop();
         std::cerr << implementation << gen_alg << "poisson with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+        std::cerr << std::endl;
+
+        clock = time_logger.new_timer(implementation, gen_alg, "Geometric[0.02]");
+        clock->start();
+        for (unsigned int rep = 0; rep < nreps; ++rep) {
+            rng.geometric(0.02);
+        }
+        clock->stop();
+        std::cerr << implementation << gen_alg << "geometric with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+
+        clock = time_logger.new_timer(implementation, gen_alg, "Geometric[p]");
+        clock->start();
+        for (unsigned int rep = 0; rep < nreps; ++rep) {
+            rng.geometric(params[rep]);
+        }
+        clock->stop();
+        std::cerr << implementation << gen_alg << "geometric with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
         std::cerr << std::endl;
     }
 }
