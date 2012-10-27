@@ -2,13 +2,13 @@
 # This file was written by hand (by mth using PAUP's configure.ac and http://autotoolset.sourceforge.net/tutorial.html as guides).
 
 AC_PREREQ(2.59)
-AC_INIT([rngtest.cpp], [0.0.1], [jeetsukumaran@gmail.com])
+AC_INIT([rngtest], [0.0.1], [jeetsukumaran@gmail.com])
 
 # AC_CONFIG_SRCDIR (UNIQUE-FILE-IN-SOURCE-DIR) UNIQUE-FILE-IN-SOURCE-DIR
 # is some file that is in the package's source directory; `configure'
 # checks for this file's existence to make sure that the directory that it
 # is told contains the source code in fact does.
-AC_CONFIG_SRCDIR([src/rngtest.cpp.cpp])
+AC_CONFIG_SRCDIR([src/rngtest.cpp])
 AC_CONFIG_HEADER([config.h])
 
 #	Directory that contains install-sh and other auxiliary files
