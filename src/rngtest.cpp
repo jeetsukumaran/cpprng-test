@@ -154,7 +154,6 @@ void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time
     }
     clock->stop();
     std::cerr << rng_name << ": poisson with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
-    std::cerr << std::endl;
 
     clock = time_logger.new_timer("C++11", rng_name, "Geometric[0.02]");
     std::geometric_distribution<> g1(0.02);
