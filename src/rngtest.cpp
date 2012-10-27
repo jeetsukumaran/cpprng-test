@@ -1,5 +1,8 @@
+#include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <map>
+#include <vector>
 #include <chrono>
 #include <random>
 #include <string>
@@ -32,6 +35,14 @@ class RunClock {
 
 }; // RunClock
 
+bool cmp_results(std::pair<std::string, double> a, std::pair<std::string, double> b) {
+    if (a.second < b.second) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 class TimeLogger {
 
     public:
@@ -39,10 +50,22 @@ class TimeLogger {
             this->logs_[title] = RunClock();
             return &this->logs_[title];
         }
+        void summarize(std::ostream& out) {
+            std::vector<std::pair<std::string, double> > results;
+            results.reserve(this->logs_.size());
+            for (auto log : this->logs_) {
+                const std::string& title = log.first;
+                double seconds = log.second.get_elapsed_seconds();
+                results.push_back(std::pair<std::string, double>(title, seconds));
+            }
+            std::sort(results.begin(), results.end(), &cmp_results);
+            for (auto result : results) {
+                out << std::setw(60) << result.first << "    " << result.second << std::endl;
+            }
+        }
 
     private:
         std::map<std::string, RunClock>     logs_;
-
 
 }; // TimeLogger
 
@@ -97,12 +120,19 @@ void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time
     }
     clock->stop();
     std::cerr << rng_name << ": poisson with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << std::endl;
 }
 
 void run_c11_mt19937_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
     std::random_device rd;
     std::mt19937 rng(rd());
     run_c11_tests("C++11 MT19937", rng, time_logger, nreps);
+}
+
+void run_c11_ranlux24_base_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
+    std::random_device rd;
+    std::ranlux24_base rng(rd());
+    run_c11_tests("C++11 RANLUX24_BASE", rng, time_logger, nreps);
 }
 
 
@@ -129,7 +159,7 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
     clock->stop();
     std::cerr << "GSL: exponential with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
-    clock = time_logger.new_timer("GS: Exp[p]");
+    clock = time_logger.new_timer("GSL: Exp[p]");
     clock->start();
     for (unsigned int rep = 0; rep < nreps; ++rep) {
         rng.exponential(params[rep]);
@@ -152,6 +182,7 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
     }
     clock->stop();
     std::cerr << "GSL: poisson with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << std::endl;
 }
 
 int main() {
@@ -159,4 +190,8 @@ int main() {
     TimeLogger      time_logger;
     run_gsl_rng_tests(time_logger, nreps);
     run_c11_mt19937_tests(time_logger, nreps);
+    run_c11_ranlux24_base_tests(time_logger, nreps);
+    std::cerr << "\n\n---\nResults:\n---\n\n";
+    std::cerr << std::flush;
+    time_logger.summarize(std::cout);
 }
