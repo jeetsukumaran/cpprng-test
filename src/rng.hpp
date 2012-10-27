@@ -99,12 +99,12 @@ class RandomNumberGenerator {
             return n;
         }
 
-        // returns a real value sampled from a Poisson distribution with rate parameter p
-        inline double poisson(double p) {
-            if (p == 0) {
-                return 0;
+        // returns a real value sampled from a Poisson distribution with mean mu
+        inline double poisson(double mu) {
+            if (mu <= 0) {
+                return 0.0;
             }
-            return gsl_ran_poisson(this->rgen_, 1.0/p);
+            return gsl_ran_poisson(this->rgen_, mu);
         }
 
     private:

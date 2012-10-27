@@ -137,8 +137,10 @@ void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time
     std::cerr << "-- Starting C++11 " << rng_name << " RNG tests\n";
     RunClock * clock = nullptr;
     std::vector<double> params;
+    std::vector<double> params2;
 
     params.reserve(nreps);
+    params2.reserve(nreps);
     clock = time_logger.get_timer("C++11", rng_name, "Unif[0,1]");
     std::uniform_real_distribution<> u01(0, 1);
     clock->start();
@@ -147,6 +149,10 @@ void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time
     }
     clock->stop();
     std::cerr << rng_name << ": uniform real random variates [0,1) x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+
+    for (auto p : params) {
+        params2.push_back(1.0/p);
+    }
 
     clock = time_logger.get_timer("C++11", rng_name, "Exp[0.2]");
     std::exponential_distribution<> e1(0.2);
@@ -166,8 +172,8 @@ void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time
     clock->stop();
     std::cerr << rng_name << ": exponential with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
-    clock = time_logger.get_timer("C++11", rng_name, "Poisson[0.2]");
-    std::poisson_distribution<> p1(0.2);
+    clock = time_logger.get_timer("C++11", rng_name, "Poisson[2.0]");
+    std::poisson_distribution<> p1(2);
     clock->start();
     for (unsigned int rep = 0; rep < nreps; ++rep) {
         p1(rng);
@@ -175,8 +181,8 @@ void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time
     clock->stop();
     std::cerr << rng_name << ": poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
-    clock = time_logger.get_timer("C++11", rng_name, "Poisson[0.02]");
-    std::poisson_distribution<> p2(0.02);
+    clock = time_logger.get_timer("C++11", rng_name, "Poisson[20]");
+    std::poisson_distribution<> p2(20);
     clock->start();
     for (unsigned int rep = 0; rep < nreps; ++rep) {
         p2(rng);
@@ -184,8 +190,8 @@ void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time
     clock->stop();
     std::cerr << rng_name << ": poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
-    clock = time_logger.get_timer("C++11", rng_name, "Poisson[0.002]");
-    std::poisson_distribution<> p3(0.002);
+    clock = time_logger.get_timer("C++11", rng_name, "Poisson[200]");
+    std::poisson_distribution<> p3(200);
     clock->start();
     for (unsigned int rep = 0; rep < nreps; ++rep) {
         p3(rng);
@@ -196,7 +202,7 @@ void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time
     clock = time_logger.get_timer("C++11", rng_name, "Poisson[p]");
     clock->start();
     for (unsigned int rep = 0; rep < nreps; ++rep) {
-        std::poisson_distribution<> p4(params[rep]);
+        std::poisson_distribution<> p4(params2[rep]);
         p4(rng);
     }
     clock->stop();
@@ -293,10 +299,12 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
         RandomNumberGenerator rng(rng_type.second);
         RunClock * clock = nullptr;
         std::vector<double> params;
+        std::vector<double> params2;
 
         std::cerr << "-- Starting " << implementation << " " << gen_alg << " RNG tests\n";
 
         params.reserve(nreps);
+        params2.reserve(nreps);
         clock = time_logger.get_timer(implementation, gen_alg, "Unif[0,1]");
         clock->start();
         for (unsigned int rep = 0; rep < nreps; ++rep) {
@@ -304,6 +312,10 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
         }
         clock->stop();
         std::cerr << implementation << gen_alg << "uniform real random variates [0,1) x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+
+        for (auto p : params) {
+            params2.push_back(1.0/p);
+        }
 
         clock = time_logger.get_timer(implementation, gen_alg, "Exp[0.2]");
         clock->start();
@@ -321,26 +333,26 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
         clock->stop();
         std::cerr << implementation << gen_alg << "exponential with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
-        clock = time_logger.get_timer(implementation, gen_alg, "Poisson[0.2]");
+        clock = time_logger.get_timer(implementation, gen_alg, "Poisson[2.0]");
         clock->start();
         for (unsigned int rep = 0; rep < nreps; ++rep) {
-            rng.poisson(0.2);
+            rng.poisson(2.0);
         }
         clock->stop();
         std::cerr << implementation << gen_alg << "poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
-        clock = time_logger.get_timer(implementation, gen_alg, "Poisson[0.02]");
+        clock = time_logger.get_timer(implementation, gen_alg, "Poisson[20.0]");
         clock->start();
         for (unsigned int rep = 0; rep < nreps; ++rep) {
-            rng.poisson(0.02);
+            rng.poisson(20.0);
         }
         clock->stop();
         std::cerr << implementation << gen_alg << "poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
-        clock = time_logger.get_timer(implementation, gen_alg, "Poisson[0.002]");
+        clock = time_logger.get_timer(implementation, gen_alg, "Poisson[200]");
         clock->start();
         for (unsigned int rep = 0; rep < nreps; ++rep) {
-            rng.poisson(0.002);
+            rng.poisson(200);
         }
         clock->stop();
         std::cerr << implementation << gen_alg << "poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
@@ -348,7 +360,7 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
         clock = time_logger.get_timer(implementation, gen_alg, "Poisson[p]");
         clock->start();
         for (unsigned int rep = 0; rep < nreps; ++rep) {
-            rng.poisson(params[rep]);
+            rng.poisson(params2[rep]);
         }
         clock->stop();
         std::cerr << implementation << gen_alg << "poisson with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
@@ -371,6 +383,24 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
         std::cerr << std::endl;
     }
 }
+
+// int main() {
+//     std::vector<double>     probs{0.01, 0.1, 1.0, 10, 100, 1000, 1e6, -0.01, -0.1, -1.0, -1000.0};
+//     std::cout << "\n-- GSL\n" << std::endl;
+//     RandomNumberGenerator gsl;
+//     for (auto p : probs) {
+//         auto r = gsl.poisson(p);
+//         std::cout << std::setw(20) << std::left << p << r << std::endl;
+//     }
+//     std::cout << "\n\n--C++11\n" << std::endl;
+//     std::random_device rd;
+//     std::mt19937 rng(rd());
+//     for (auto p : probs) {
+//         std::poisson_distribution<> pois(p);
+//         auto r = pois(rng);
+//         std::cout << std::setw(20) << std::left << p << r << std::endl;
+//     }
+// }
 
 int main() {
     unsigned int    nreps = DEFAULT_NREPS;
