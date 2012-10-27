@@ -49,7 +49,7 @@ class TimeLogger {
     public:
         RunClock * new_timer(const std::string& implementation, const std::string& subtype, const std::string& operation) {
             std::ostringstream o;
-            o << std::setw(6) << std::left << implementation << "  " << std::setw(20) << std::left << subtype << "  " << std::setw(20) << std::left << operation;
+            o << std::setw(6) << std::left << implementation << "  " << std::setw(20) << std::left << subtype << "  " << std::setw(15) << std::left << operation;
             std::string title = o.str();
             this->logs_[title] = RunClock();
             return &this->logs_[title];
