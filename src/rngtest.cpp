@@ -10,7 +10,7 @@
 #include <gsl/gsl_rng.h>
 #include "rng.hpp"
 
-#define DEFAULT_NREPS   10000
+#define DEFAULT_NREPS   100000
 
 class RunClock {
 
