@@ -1,6 +1,7 @@
 #include <utility>
 #include <algorithm>
 #include <iomanip>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <map>
@@ -367,7 +368,10 @@ int main() {
     run_c11_knuth_b_tests(time_logger, nreps);
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
-    // time_logger.summarize(std::cout);
-    // time_logger.summarize_by_operation(std::cout);
-    time_logger.summarize_best_by_operation(std::cout);
+    std::ofstream flat("results1.flat.txt");
+    time_logger.summarize(flat);
+    std::ofstream grouped("results1.grouped.txt");
+    time_logger.summarize_by_operation(grouped);
+    std::ofstream best("results1.best.txt");
+    time_logger.summarize_best_by_operation(best);
 }
