@@ -76,7 +76,7 @@ class TimeLogger {
 
 template <class Generator>
 void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
-    std::cerr << "-- Starting " << rng_name << "-based RNG tests\n";
+    std::cerr << "-- Starting C++11 " << rng_name << " RNG tests\n";
     RunClock * clock = nullptr;
     std::vector<double> params;
 
@@ -134,18 +134,47 @@ void run_c11_mt19937_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_N
     run_c11_tests("MT19937", rng, time_logger, nreps);
 }
 
+void run_c11_mt19937_64_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
+    std::random_device rd;
+    std::mt19937_64 rng(rd());
+    run_c11_tests("MT19937_64", rng, time_logger, nreps);
+}
+
 void run_c11_ranlux24_base_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
     std::random_device rd;
     std::ranlux24_base rng(rd());
     run_c11_tests("RANLUX24_BASE", rng, time_logger, nreps);
 }
 
+void run_c11_ranlux24_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
+    std::random_device rd;
+    std::ranlux24 rng(rd());
+    run_c11_tests("RANLUX24", rng, time_logger, nreps);
+}
+
+void run_c11_ranlux48_base_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
+    std::random_device rd;
+    std::ranlux48_base rng(rd());
+    run_c11_tests("RANLUX48_BASE", rng, time_logger, nreps);
+}
+
+void run_c11_ranlux48_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
+    std::random_device rd;
+    std::ranlux48 rng(rd());
+    run_c11_tests("RANLUX48", rng, time_logger, nreps);
+}
 
 void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
     std::string implementation = "GSL";
     std::map<std::string, const gsl_rng_type *> rng_types;
-    rng_types["taus"] = gsl_rng_taus;
+    rng_types["taus"] = gsl_rng_taus2;
     rng_types["mt19937"] = gsl_rng_mt19937;
+    rng_types["ranlux"] = gsl_rng_ranlux;
+    // rng_types["gfsr4"] = gsl_rng_gfsr4;
+    // rng_types["mrg"] = gsl_rng_mrg;
+    // rng_types["cmrg"] = gsl_rng_cmrg;
+    // rng_types["ranlxd1"] = gsl_rng_ranlxd1;
+    // rng_types["ranlxs0"] = gsl_rng_ranlxs0;
     for (auto rng_type : rng_types) {
         const std::string& gen_alg = rng_type.first;
         RandomNumberGenerator rng(rng_type.second);
@@ -203,7 +232,11 @@ int main() {
     TimeLogger      time_logger;
     run_gsl_rng_tests(time_logger, nreps);
     run_c11_mt19937_tests(time_logger, nreps);
+    run_c11_mt19937_64_tests(time_logger, nreps);
     run_c11_ranlux24_base_tests(time_logger, nreps);
+    run_c11_ranlux24_tests(time_logger, nreps);
+    run_c11_ranlux48_base_tests(time_logger, nreps);
+    run_c11_ranlux48_tests(time_logger, nreps);
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
     time_logger.summarize(std::cout);
