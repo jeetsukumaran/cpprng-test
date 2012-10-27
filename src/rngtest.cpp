@@ -17,7 +17,14 @@ class RunClock {
     typedef std::chrono::time_point<std::chrono::high_resolution_clock> TimePointType;
 
     public:
-        RunClock() {}
+        RunClock(const std::string& implementation,
+            const std::string& algorithm,
+            const std::string& operation) :
+            implementation_(implementation),
+            algorithm_(algorithm),
+            operation_(operation),
+            elapsed_seconds_(-1) {
+        }
         void start() {
             this->begin_ = std::chrono::system_clock::now();
         }
@@ -28,17 +35,30 @@ class RunClock {
             return std::chrono::duration_cast<std::chrono::microseconds>(this->end_-this->begin_).count();
         }
         double get_elapsed_seconds() {
-            return static_cast<double>(this->get_elapsed_microseconds())/1e6;
+            if (this->elapsed_seconds_ < 0) {
+                this->elapsed_seconds_ = static_cast<double>(this->get_elapsed_microseconds())/1e6;
+            }
+            return this->elapsed_seconds_;
+        }
+        void print(std::ostream& out) {
+            out << std::setw(6) << std::left << this->implementation_ << " ";
+            out << std::setw(25) << std::left << this->algorithm_ << " ";
+            out << std::setw(25) << std::left << this->operation_ << " ";
+            out << this->get_elapsed_seconds() << std::endl;
         }
 
     private:
+        std::string   implementation_;
+        std::string   algorithm_;
+        std::string   operation_;
         TimePointType begin_;
         TimePointType end_;
+        double        elapsed_seconds_;
 
 }; // RunClock
 
-bool cmp_results(std::pair<std::string, double> a, std::pair<std::string, double> b) {
-    if (a.second < b.second) {
+bool cmp_results(RunClock * a, RunClock * b) {
+    if (a->get_elapsed_seconds() < b->get_elapsed_seconds()) {
         return true;
     } else {
         return false;
@@ -48,29 +68,25 @@ bool cmp_results(std::pair<std::string, double> a, std::pair<std::string, double
 class TimeLogger {
 
     public:
-        RunClock * new_timer(const std::string& implementation, const std::string& subtype, const std::string& operation) {
-            std::ostringstream o;
-            o << std::setw(6) << std::left << implementation << "  " << std::setw(20) << std::left << subtype << "  " << std::setw(15) << std::left << operation;
-            std::string title = o.str();
-            this->logs_[title] = RunClock();
-            return &this->logs_[title];
+        ~TimeLogger() {
+            for (auto log : this->logs_) {
+                delete log;
+            }
+        }
+        RunClock * new_timer(const std::string& implementation, const std::string& algorithm, const std::string& operation) {
+            RunClock * rc = new RunClock(implementation, algorithm, operation);
+            this->logs_.push_back(rc);
+            return rc;
         }
         void summarize(std::ostream& out) {
-            std::vector<std::pair<std::string, double> > results;
-            results.reserve(this->logs_.size());
-            for (auto log : this->logs_) {
-                const std::string& title = log.first;
-                double seconds = log.second.get_elapsed_seconds();
-                results.push_back(std::pair<std::string, double>(title, seconds));
-            }
-            std::sort(results.begin(), results.end(), &cmp_results);
-            for (auto result : results) {
-                out << std::setw(50) << std::left << result.first << "  " << result.second << std::endl;
+            std::sort(this->logs_.begin(), this->logs_.end(), &cmp_results);
+            for (auto rc : this->logs_) {
+                rc->print(out);
             }
         }
 
     private:
-        std::map<std::string, RunClock>     logs_;
+        std::vector<RunClock *>   logs_;
 
 }; // TimeLogger
 
