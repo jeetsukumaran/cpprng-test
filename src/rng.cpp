@@ -2,7 +2,12 @@
 #include "rng.hpp"
 
 RandomNumberGenerator::RandomNumberGenerator() {
-    this->init();
+    this->init(gsl_rng_taus);
+    this->set_seed_from_time();
+}
+
+RandomNumberGenerator::RandomNumberGenerator(const gsl_rng_type * T) {
+    this->init(T);
     this->set_seed_from_time();
 }
 
@@ -15,8 +20,8 @@ RandomNumberGenerator::~RandomNumberGenerator() {
     gsl_rng_free(this->rgen_);
 }
 
-void RandomNumberGenerator::init() {
-    this->rgen_ = gsl_rng_alloc(gsl_rng_taus);
+void RandomNumberGenerator::init(const gsl_rng_type * T) {
+    this->rgen_ = gsl_rng_alloc(T);
     this->max_int_ = gsl_rng_max(this->rgen_);
     this->min_int_ = gsl_rng_min(this->rgen_);
 }

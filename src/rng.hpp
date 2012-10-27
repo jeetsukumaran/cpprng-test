@@ -14,10 +14,11 @@ class RandomNumberGenerator {
     public:
 
         RandomNumberGenerator();
+        RandomNumberGenerator(const gsl_rng_type * T);
         RandomNumberGenerator(RandomSeedType rng_seed);
         ~RandomNumberGenerator();
 
-        void init();
+        void init(const gsl_rng_type * T = nullptr);
         RandomSeedType get_seed() const;
         void set_seed(RandomSeedType seed);
         void set_seed_from_time();
