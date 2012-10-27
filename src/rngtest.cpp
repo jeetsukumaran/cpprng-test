@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <exception>
 #include <iomanip>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <map>
@@ -388,7 +389,10 @@ int main() {
     }
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
-    // time_logger.summarize(std::cout);
-    // time_logger.summarize_by_operation(std::cout);
-    time_logger.summarize_best_by_operation(std::cout);
+    std::ofstream flat("results.flat.txt");
+    time_logger.summarize(flat);
+    std::ofstream grouped("results.grouped.txt");
+    time_logger.summarize_by_operation(grouped);
+    std::ofstream best("results.best.txt");
+    time_logger.summarize_best_by_operation(best);
 }
