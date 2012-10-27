@@ -140,6 +140,18 @@ void run_c11_mt19937_64_tests(TimeLogger& time_logger, unsigned int nreps=DEFAUL
     run_c11_tests("MT19937_64", rng, time_logger, nreps);
 }
 
+void run_c11_minstd_rand_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
+    std::random_device rd;
+    std::minstd_rand rng(rd());
+    run_c11_tests("MINSTD_RAND", rng, time_logger, nreps);
+}
+
+void run_c11_minstd_rand0_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
+    std::random_device rd;
+    std::minstd_rand0 rng(rd());
+    run_c11_tests("MINSTD_RAND", rng, time_logger, nreps);
+}
+
 void run_c11_ranlux24_base_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
     std::random_device rd;
     std::ranlux24_base rng(rd());
@@ -237,6 +249,8 @@ int main() {
     run_c11_ranlux24_tests(time_logger, nreps);
     run_c11_ranlux48_base_tests(time_logger, nreps);
     run_c11_ranlux48_tests(time_logger, nreps);
+    run_c11_minstd_rand_tests(time_logger, nreps);
+    run_c11_minstd_rand0_tests(time_logger, nreps);
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
     time_logger.summarize(std::cout);
