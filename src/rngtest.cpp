@@ -382,5 +382,6 @@ int main() {
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
     // time_logger.summarize(std::cout);
-    time_logger.summarize_by_operation(std::cout);
+    // time_logger.summarize_by_operation(std::cout);
+    time_logger.summarize_best_by_operation(std::cout);
 }
