@@ -71,6 +71,9 @@ class RandomNumberGenerator {
 
         // returns a random variate from an exponential distribution with rate parameter p
         inline double exponential(double p) {
+            if (p == 0) {
+                return 0;
+            }
             return gsl_ran_exponential(this->rgen_, 1.0/p);
         }
 
@@ -97,6 +100,9 @@ class RandomNumberGenerator {
 
         // returns a real value sampled from a Poisson distribution with rate parameter p
         inline double poisson(double p) {
+            if (p == 0) {
+                return 0;
+            }
             return gsl_ran_poisson(this->rgen_, 1.0/p);
         }
 
