@@ -64,7 +64,7 @@ class TimeLogger {
             }
             std::sort(results.begin(), results.end(), &cmp_results);
             for (auto result : results) {
-                out << std::setw(60) << std::left << result.first << "  " << result.second << std::endl;
+                out << std::setw(50) << std::left << result.first << "  " << result.second << std::endl;
             }
         }
 
@@ -130,13 +130,13 @@ void run_c11_tests(const std::string& rng_name, Generator& rng, TimeLogger& time
 void run_c11_mt19937_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
     std::random_device rd;
     std::mt19937 rng(rd());
-    run_c11_tests("C++11 MT19937", rng, time_logger, nreps);
+    run_c11_tests("MT19937", rng, time_logger, nreps);
 }
 
 void run_c11_ranlux24_base_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS) {
     std::random_device rd;
     std::ranlux24_base rng(rd());
-    run_c11_tests("C++11 RANLUX24_BASE", rng, time_logger, nreps);
+    run_c11_tests("RANLUX24_BASE", rng, time_logger, nreps);
 }
 
 
