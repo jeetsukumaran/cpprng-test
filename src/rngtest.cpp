@@ -381,6 +381,6 @@ int main() {
     run_c11_knuth_b_tests(time_logger, nreps);
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
-    time_logger.summarize(std::cout);
-    // time_logger.summarize_by_operation(std::cout);
+    // time_logger.summarize(std::cout);
+    time_logger.summarize_by_operation(std::cout);
 }
