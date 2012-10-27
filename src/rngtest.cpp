@@ -10,6 +10,7 @@
 #include <gsl/gsl_rng.h>
 #include "rng.hpp"
 
+#define DEFAULT_REPEAT  100
 #define DEFAULT_NREPS   100000
 
 class RunClock {
@@ -24,19 +25,28 @@ class RunClock {
             algorithm_(algorithm),
             operation_(operation),
             elapsed_seconds_(-1) {
+                this->begin_.reserve(DEFAULT_REPEAT);
+                this->end_.reserve(DEFAULT_REPEAT);
         }
         void start() {
-            this->begin_ = std::chrono::system_clock::now();
+            this->elapsed_seconds_ = -1;
+            this->begin_.push_back(std::chrono::system_clock::now());
         }
         void stop() {
-            this->end_ = std::chrono::system_clock::now();
+            this->end_.push_back(std::chrono::system_clock::now());
         }
-        long get_elapsed_microseconds() {
-            return std::chrono::duration_cast<std::chrono::microseconds>(this->end_-this->begin_).count();
+        long get_elapsed_microseconds(const TimePointType& begin, const TimePointType& end) {
+            return std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
         }
         double get_elapsed_seconds() {
             if (this->elapsed_seconds_ < 0) {
-                this->elapsed_seconds_ = static_cast<double>(this->get_elapsed_microseconds())/1e6;
+                double total_microseconds = 0;
+                for (long unsigned int idx = 0; idx < this->begin_.size(); ++idx) {
+                    const TimePointType& begin = this->begin_[idx];
+                    const TimePointType& end = this->end_[idx];
+                    total_microseconds += static_cast<double>(this->get_elapsed_microseconds(begin, end));
+                }
+                this->elapsed_seconds_ = (total_microseconds) / (static_cast<double>(this->begin_.size()) * 1e6);
             }
             return this->elapsed_seconds_;
         }
@@ -48,12 +58,12 @@ class RunClock {
         }
 
     private:
-        std::string   implementation_;
-        std::string   algorithm_;
-        std::string   operation_;
-        TimePointType begin_;
-        TimePointType end_;
-        double        elapsed_seconds_;
+        std::string                 implementation_;
+        std::string                 algorithm_;
+        std::string                 operation_;
+        std::vector<TimePointType>  begin_;
+        std::vector<TimePointType>  end_;
+        double                      elapsed_seconds_;
 
 }; // RunClock
 
@@ -358,6 +368,6 @@ int main() {
     run_c11_knuth_b_tests(time_logger, nreps);
     std::cerr << "\n\n---\nResults:\n---\n\n";
     std::cerr << std::flush;
-    // time_logger.summarize(std::cout);
-    time_logger.summarize_by_operation(std::cout);
+    time_logger.summarize(std::cout);
+    // time_logger.summarize_by_operation(std::cout);
 }
