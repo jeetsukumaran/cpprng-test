@@ -1,3 +1,4 @@
+#include <utility>
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -26,10 +27,10 @@ class RunClock {
             elapsed_seconds_(-1) {
         }
         void start() {
-            this->begin_ = std::chrono::system_clock::now();
+            this->begin_ = std::move(std::chrono::system_clock::now());
         }
         void stop() {
-            this->end_ = std::chrono::system_clock::now();
+            this->end_ = std::move(std::chrono::system_clock::now());
         }
         long get_elapsed_microseconds() {
             return std::chrono::duration_cast<std::chrono::microseconds>(this->end_-this->begin_).count();
