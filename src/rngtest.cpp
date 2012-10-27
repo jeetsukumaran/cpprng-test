@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <exception>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -28,25 +29,34 @@ class RunClock {
                 this->begin_.reserve(DEFAULT_REPEAT);
                 this->end_.reserve(DEFAULT_REPEAT);
         }
+        void check_sync() {
+            if (this->begin_.size() != this->end_.size()) {
+                std::cerr << "\n\n\n*** ERROR: Unequal start and stop events ***\n\n\n" << std::endl;
+                exit(1);
+            }
+        }
         void start() {
+            this->check_sync();
             this->elapsed_seconds_ = -1;
             this->begin_.push_back(std::chrono::system_clock::now());
         }
         void stop() {
             this->end_.push_back(std::chrono::system_clock::now());
+            this->check_sync();
         }
         long get_elapsed_microseconds(const TimePointType& begin, const TimePointType& end) {
             return std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
         }
         double get_elapsed_seconds() {
             if (this->elapsed_seconds_ < 0) {
-                double total_microseconds = 0;
+                this->check_sync();
+                unsigned long total_microseconds = 0;
                 for (long unsigned int idx = 0; idx < this->begin_.size(); ++idx) {
                     const TimePointType& begin = this->begin_[idx];
                     const TimePointType& end = this->end_[idx];
-                    total_microseconds += static_cast<double>(this->get_elapsed_microseconds(begin, end));
+                    total_microseconds += this->get_elapsed_microseconds(begin, end);
                 }
-                this->elapsed_seconds_ = (total_microseconds) / (static_cast<double>(this->begin_.size()) * 1e6);
+                this->elapsed_seconds_ = static_cast<double>(total_microseconds) / (static_cast<double>(this->begin_.size()) * 1e6);
             }
             return this->elapsed_seconds_;
         }
