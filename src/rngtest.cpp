@@ -233,8 +233,8 @@ void run_gsl_rng_tests(TimeLogger& time_logger, unsigned int nreps=DEFAULT_NREPS
     std::map<std::string, const gsl_rng_type *> rng_types;
     rng_types["taus"] = gsl_rng_taus2;
     rng_types["mt19937"] = gsl_rng_mt19937;
-    rng_types["ranlux"] = gsl_rng_ranlux;
-    rng_types["gfsr4"] = gsl_rng_gfsr4;
+    // rng_types["ranlux"] = gsl_rng_ranlux;
+    // rng_types["gfsr4"] = gsl_rng_gfsr4;
     // rng_types["mrg"] = gsl_rng_mrg;
     // rng_types["cmrg"] = gsl_rng_cmrg;
     // rng_types["ranlxd1"] = gsl_rng_ranlxd1;
