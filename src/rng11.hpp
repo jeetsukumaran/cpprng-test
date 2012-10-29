@@ -36,13 +36,13 @@ class RandomNumberGenerator11 {
 
         // returns real value uniformly distributed in [0, 1]
         inline double uniform_real() {
-            std::uniform_real_distribution<double>::param_type param(0.0, 1.0);
+            typename decltype(this->uniform_real_rng_)::param_type param(0.0, 1.0);
             return this->uniform_real_rng_(this->engine_, param);
         }
 
         // // returns real value uniformly distributed in [a, b]
         inline double uniform_real(double a, double b) {
-            std::uniform_real_distribution<double>::param_type param(a, b);
+            typename decltype(this->uniform_real_rng_)::param_type param(a, b);
             return this->uniform_real_rng_(this->engine_, param);
         }
 
@@ -62,7 +62,7 @@ class RandomNumberGenerator11 {
             if (p == 0) {
                 return 0.0;
             }
-            std::exponential_distribution<double>::param_type param(p);
+            typename decltype(this->exponential_rng_)::param_type param(p);
             return this->exponential_rng_(this->engine_, param);
         }
 
@@ -74,7 +74,7 @@ class RandomNumberGenerator11 {
         // returns an integer sampled from a Geometric distribution with rate parameter p,
         // with support in {0, 1, 2, ...}
         inline unsigned long geometric(double p) {
-            std::geometric_distribution<unsigned long>::param_type param(p);
+            typename decltype(this->geometric_rng_)::param_type param(p);
             return this->geometric_rng_(this->engine_, param);
         }
 
@@ -93,7 +93,7 @@ class RandomNumberGenerator11 {
             if (mu <= 0) {
                 return 0;
             }
-            std::poisson_distribution<unsigned long>::param_type param(mu);
+            typename decltype(this->poisson_rng_)::param_type param(mu);
             return this->poisson_rng_(this->engine_, param);
         }
 
