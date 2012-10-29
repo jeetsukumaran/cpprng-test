@@ -14,7 +14,7 @@
 #include "rng.hpp"
 #include "rng11.hpp"
 
-#define DEFAULT_REPEAT  1
+#define DEFAULT_REPEAT  100
 #define DEFAULT_NREPS   100000
 
 class RunClock {
@@ -155,7 +155,7 @@ void run_rng_tests(
         params.push_back(rng.uniform_real());
     }
     clock->stop();
-    std::cerr << implementation << " " << gen_alg << "uniform real random variates [0,1) x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << implementation << " " << gen_alg << " uniform real random variates [0,1) x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
     for (auto p : params) {
         params2.push_back(1.0/p);
@@ -167,7 +167,7 @@ void run_rng_tests(
         rng.exponential(0.2);
     }
     clock->stop();
-    std::cerr << implementation << " " << gen_alg << "exponential with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << implementation << " " << gen_alg << " exponential with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
     clock = time_logger.get_timer(implementation, gen_alg, "Exp[p]");
     clock->start();
@@ -175,7 +175,7 @@ void run_rng_tests(
         rng.exponential(params[rep]);
     }
     clock->stop();
-    std::cerr << implementation << " " << gen_alg << "exponential with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << implementation << " " << gen_alg << " exponential with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
     clock = time_logger.get_timer(implementation, gen_alg, "Poisson[2.0]");
     clock->start();
@@ -183,7 +183,7 @@ void run_rng_tests(
         rng.poisson(2.0);
     }
     clock->stop();
-    std::cerr << implementation << " " << gen_alg << "poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << implementation << " " << gen_alg << " poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
     clock = time_logger.get_timer(implementation, gen_alg, "Poisson[20.0]");
     clock->start();
@@ -191,7 +191,7 @@ void run_rng_tests(
         rng.poisson(20.0);
     }
     clock->stop();
-    std::cerr << implementation << " " << gen_alg << "poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << implementation << " " << gen_alg << " poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
     clock = time_logger.get_timer(implementation, gen_alg, "Poisson[200]");
     clock->start();
@@ -199,7 +199,7 @@ void run_rng_tests(
         rng.poisson(200);
     }
     clock->stop();
-    std::cerr << implementation << " " << gen_alg << "poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << implementation << " " << gen_alg << " poisson with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
     clock = time_logger.get_timer(implementation, gen_alg, "Poisson[p]");
     clock->start();
@@ -207,7 +207,7 @@ void run_rng_tests(
         rng.poisson(params2[rep]);
     }
     clock->stop();
-    std::cerr << implementation << " " << gen_alg << "poisson with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << implementation << " " << gen_alg << " poisson with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
     clock = time_logger.get_timer(implementation, gen_alg, "Geometric[0.2]");
     clock->start();
@@ -215,7 +215,7 @@ void run_rng_tests(
         rng.geometric(0.2);
     }
     clock->stop();
-    std::cerr << implementation << " " << gen_alg << "geometric with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << implementation << " " << gen_alg << " geometric with fixed parameter x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
 
     clock = time_logger.get_timer(implementation, gen_alg, "Geometric[p]");
     clock->start();
@@ -223,7 +223,7 @@ void run_rng_tests(
         rng.geometric(params[rep]);
     }
     clock->stop();
-    std::cerr << implementation << " " << gen_alg << "geometric with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
+    std::cerr << implementation << " " << gen_alg << " geometric with varying parameters x " << nreps << ":\t" << clock->get_elapsed_seconds() << std::endl;
     std::cerr << std::endl;
 }
 
